@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import axios from 'axios';
 
 const Filter = ({ search, setSearch }) => {
   return (
@@ -43,12 +44,15 @@ const Persons = ({ persons }) => {
 }
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '0123-123123' },
-    { name: 'Arto Rellas', number: '0123-123123' },
-    { name: 'Mauri Hellas', number: '0123-123123' },
-    { name: 'Joku muu', number: '0123-333333' }
-  ])
+
+  useEffect(() => {
+    (async () => {
+      const res = await axios.get('http://localhost:3001/persons');
+      console.log(res);
+      setPersons(res.data);
+    })()
+  }, [])
+  const [persons, setPersons] = useState([])
   const [search, setSearch] = useState('')
 
   const matchingPersons = persons.filter(p => p.name.toLowerCase().indexOf(search.toLowerCase()) !== -1)
