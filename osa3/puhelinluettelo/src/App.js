@@ -37,13 +37,21 @@ const App = () => {
       }
       return;
     }
-    await personService.create(newPerson).then((res) => {
+    try {
+      const res = await personService.create(newPerson)
+      console.log(res.data)
       setPersons([
         ...persons,
         res.data
       ])
-    })
-    createNotification(`Lisättiin ${newPerson.name}`, true)
+      createNotification(`Lisättiin ${newPerson.name}`, true)
+    } catch (err) {
+      console.log(err.response)
+      if (err.response)
+        createNotification(`Käyttäjän lisääminen epäonnistui: ${err.response.data.error}`, false)
+      else
+        createNotification(`Käyttäjän lisääminen epäonnistui: ${err.message}`, false)
+    }
   }
 
   const removePerson = async (person) => {
