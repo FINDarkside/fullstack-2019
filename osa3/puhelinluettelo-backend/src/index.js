@@ -2,8 +2,9 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
+const Person = require('./models/person');
 
-morgan.token('body',  (req, res) => JSON.stringify(req.body))
+morgan.token('body', (req, res) => JSON.stringify(req.body))
 
 app.use(express.static('build'))
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
@@ -32,17 +33,18 @@ app.get('/info', (req, res) => {
     res.send(`Puhelinluettelossa on ${persons.length} henkilön tiedot. <br/> ${new Date()}`)
 })
 
-app.get('/api/persons', (req, res) => {
-    res.json(persons)
+app.get('/api/persons', async (req, res) => {
+    const persons = await Person.find();
+    res.json(persons.map(p => p.toJSON()))
 })
 
-app.get('/api/persons/:id', (req, res) => {
+app.get('/api/persons/:id', async (req, res) => {
     const id = req.params.id
-    const person = persons.find(n => n.id === id);
+    const person = await Person.findOne({ _id: id })
     if (!person)
         res.status(404).end()
     else
-        res.json(person)
+        res.json(person.toJSON())
 })
 
 app.delete('/api/persons/:id', (req, res) => {
