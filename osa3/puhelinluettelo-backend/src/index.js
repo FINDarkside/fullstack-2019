@@ -37,7 +37,7 @@ app.put('/api/persons/:id', async (req, res) => {
         throw new Error('Name must be string')
     if (typeof personData.number !== 'string')
         throw new Error('Number must be string')
-    const person = await Person.findOneAndUpdate(req.body.id, personData, { new: true });
+    const person = await Person.findByIdAndUpdate(req.params.id, personData, { new: true });
     if (!person)
         throw new Error('User does not exist')
     res.json(person.toJSON());
