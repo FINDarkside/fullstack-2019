@@ -28,6 +28,21 @@ app.get('/api/persons/:id', async (req, res) => {
         res.json(person.toJSON())
 })
 
+app.put('/api/persons/:id', async (req, res) => {
+    const personData = {
+        name: req.body.name,
+        number: req.body.number
+    }
+    if (typeof personData.name !== 'string')
+        throw new Error('Name must be string')
+    if (typeof personData.number !== 'string')
+        throw new Error('Number must be string')
+    const person = await Person.findOneAndUpdate(req.body.id, personData);
+    if (!person)
+        throw new Error('User does not exist')
+    res.json(person.toJSON());
+})
+
 app.delete('/api/persons/:id', async (req, res) => {
     const id = Number(req.params.id)
     await Person.deleteOne(id);
