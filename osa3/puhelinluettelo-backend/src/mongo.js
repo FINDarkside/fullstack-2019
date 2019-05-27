@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const personSchema = new mongoose.Schema({
-    id: Number,
+    id: String,
     name: String,
     number: String,
 })
@@ -25,7 +25,6 @@ async function main() {
         const name = process.argv[3]
         const number = process.argv[4]
         const person = new Person({
-            id: Math.round(Math.random() * 100000000),
             name,
             number
         })
