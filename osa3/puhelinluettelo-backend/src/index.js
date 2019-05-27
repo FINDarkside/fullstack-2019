@@ -28,10 +28,10 @@ app.get('/api/persons/:id', async (req, res) => {
         res.json(person.toJSON())
 })
 
-app.delete('/api/persons/:id', (req, res) => {
-    /*const id = Number(req.params.id)
-    persons = persons.filter(n => n.id !== id);
-    res.status(204).end()*/
+app.delete('/api/persons/:id', async (req, res) => {
+    const id = Number(req.params.id)
+    await Person.deleteOne(id);
+    res.status(204).end()
 })
 
 app.post('/api/persons', async (req, res) => {
