@@ -55,6 +55,20 @@ app.post('/api/persons', async (req, res) => {
     res.json(person.toJSON());
 })
 
+app.use((req, res) => {
+    res.status(404).send({ error: 'unknown endpoint' })
+})
+
+app.use((error, request, response, next) => {
+    console.error(error.message)
+
+    if (error.name === 'CastError' && error.kind == 'ObjectId') {
+        return response.status(400).send({ error: 'malformatted id' })
+    }
+
+    next(error)
+})
+
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
