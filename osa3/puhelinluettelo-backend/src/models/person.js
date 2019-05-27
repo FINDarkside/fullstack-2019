@@ -1,6 +1,8 @@
 'use strict';
 const mongoose = require('mongoose')
 const dotenv = require('dotenv')
+
+mongoose.set('useFindAndModify', false)
 dotenv.config()
 const url = `mongodb+srv://fullstack:${process.env.MONGO_PASSWORD}@${process.env.MONGO_URL}`
 mongoose.connect(url, { useNewUrlParser: true }).then(() => {
