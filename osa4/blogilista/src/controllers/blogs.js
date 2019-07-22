@@ -55,7 +55,7 @@ blogsRouter.put('/:id', async (request, response, next) => {
             author: request.body.author,
             url: request.body.url,
             likes: request.body.likes,
-        }
+        };
         const blog = await Blog.findByIdAndUpdate(request.params.id, blogData, { new: true });
         if (!blog)
             response.status(404).json({ err: 'User does not exist' });

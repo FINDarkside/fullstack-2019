@@ -1,6 +1,6 @@
-const dummy = (blogs) => {
+const dummy = () => {
     return 1;
-}
+};
 
 function totalLikes(blogs) {
     return blogs.reduce((prev, curr) => prev + curr.likes, 0);
@@ -42,4 +42,4 @@ module.exports = {
     favoriteBlog,
     mostBlogs,
     mostLikes,
-}
+};

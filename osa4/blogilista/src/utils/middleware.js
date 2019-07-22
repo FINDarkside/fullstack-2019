@@ -13,7 +13,7 @@ function errorHandler(error, request, response, next) {
     } else {
         return response.status(500).send({ error: error.message });
     }
-};
+}
 
 function getTokenFromRequest(request, response, next) {
     const authorization = request.get('authorization');
@@ -30,4 +30,4 @@ function getTokenFromRequest(request, response, next) {
 module.exports = {
     errorHandler,
     getTokenFromRequest
-}
+};
