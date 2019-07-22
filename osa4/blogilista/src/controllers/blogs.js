@@ -1,9 +1,11 @@
 const blogsRouter = require('express').Router();
 const Blog = require('../models/Blog');
+const User = require('../models/User');
 
 blogsRouter.get('/', (request, response) => {
     Blog
         .find({})
+        .populate('user', { id: 1, username: 1, name: 1 })
         .then(blogs => {
             response.json(blogs);
         });
@@ -11,9 +13,19 @@ blogsRouter.get('/', (request, response) => {
 
 blogsRouter.post('/', async (request, response, next) => {
     try {
-        const blog = new Blog(request.body);
+        const decodedToken = request.decodedToken;
+        if (!decodedToken)
+            return response.status(300).json({ error: 'Invalid token' });
+
+        const owner = await User.findById(decodedToken.id);
+        const blog = new Blog({
+            ...request.body,
+            user: owner.id,
+        });
 
         const res = await blog.save();
+        owner.blogs.push(res.id);
+        owner.save();
         response.status(201).json(res);
     } catch (err) {
         next(err);
@@ -22,7 +34,14 @@ blogsRouter.post('/', async (request, response, next) => {
 
 blogsRouter.delete('/:id', async (request, response, next) => {
     try {
-        await Blog.deleteOne({ id: request.params.id });
+        const decodedToken = request.decodedToken;
+        if (!decodedToken)
+            return response.status(300).json({ error: 'Invalid token' });
+
+        const blog = await Blog.findById(request.params.id);
+        if (blog.user.toString() !== decodedToken.id)
+            return response.status(300).json({ error: 'Cannot delete someone elses blog' });
+        await Blog.findByIdAndDelete({ _id: request.params.id });
         response.status(204).end();
     } catch (err) {
         next(err);

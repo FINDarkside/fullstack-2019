@@ -1,3 +1,5 @@
+const jwt = require('jsonwebtoken');
+
 function errorHandler(error, request, response, next) {
     if (process.env.NODE_ENV !== 'test')
         console.error(error.message);
@@ -13,6 +15,19 @@ function errorHandler(error, request, response, next) {
     }
 };
 
+function getTokenFromRequest(request, response, next) {
+    const authorization = request.get('authorization');
+    if (!authorization || !authorization.toLowerCase().startsWith('bearer '))
+        return next();
+    const token = authorization.substring(7);
+    const decodedToken = jwt.decode(token);
+    if (!jwt.verify(token, process.env.JWT_SECRET) || !decodedToken.id)
+        return next();
+    request.decodedToken = decodedToken;
+    next();
+}
+
 module.exports = {
     errorHandler,
+    getTokenFromRequest
 }

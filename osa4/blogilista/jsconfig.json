@@ -3,6 +3,6 @@
         "target": "esnext",
         "module": "commonjs",
         "strictNullChecks": false,
-        "checkJs": true
+        "checkJs": false
     }
 }
