@@ -15,7 +15,7 @@ blogsRouter.post('/', async (request, response, next) => {
     try {
         const decodedToken = request.decodedToken;
         if (!decodedToken)
-            return response.status(300).json({ error: 'Invalid token' });
+            return response.status(403).json({ error: 'Invalid token' });
 
         const owner = await User.findById(decodedToken.id);
         const blog = new Blog({
@@ -36,11 +36,11 @@ blogsRouter.delete('/:id', async (request, response, next) => {
     try {
         const decodedToken = request.decodedToken;
         if (!decodedToken)
-            return response.status(300).json({ error: 'Invalid token' });
+            return response.status(403).json({ error: 'Invalid token' });
 
         const blog = await Blog.findById(request.params.id);
         if (blog.user.toString() !== decodedToken.id)
-            return response.status(300).json({ error: 'Cannot delete someone elses blog' });
+            return response.status(403).json({ error: 'Cannot delete someone elses blog' });
         await Blog.findByIdAndDelete({ _id: request.params.id });
         response.status(204).end();
     } catch (err) {
