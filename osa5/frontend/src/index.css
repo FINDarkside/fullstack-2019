@@ -1,0 +1,22 @@
+.notification-bar {
+    margin: 0px 10px;
+}
+
+.notification {
+    display: inline-block;
+    padding: 10px;
+    min-width: 300px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.notification.success {
+    background: #d4edda;
+    border: 2px solid #9eea99;
+}
+
+.notification.error {
+    display: inline-block;
+    background: #ffb2b2;
+    border: 2px solid #ff8888;
+}
