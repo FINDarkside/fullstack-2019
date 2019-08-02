@@ -26,7 +26,7 @@ const Blog = ({ blog, likeBlog, deleteBlog, showDeleteButton }) => {
 
   return (
     <div className="blog">
-      <div onClick={toggleExpanded}>
+      <div onClick={toggleExpanded} className="blogTitle">
         {blog.title} {blog.author}
       </div>
       {expanded && expandedData()}
