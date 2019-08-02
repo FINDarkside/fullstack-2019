@@ -1,16 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 import * as loginService from '../services/login';
 import PropTypes from 'prop-types';
+import { useField } from '../hooks'
 
 const Login = ({ changeUser, createNotification }) => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const { setValue: setUsername, ...usernameField } = useField('text');
+  const { setValue: setPassword, ...passwordField } = useField('passowrd');
 
   const handleLogin = async (event) => {
+    console.log('handleLogin');
     event.preventDefault();
     try {
-      const user = await loginService.login(username, password);
-      createNotification(`User ${username} logged in`, true);
+      const user = await loginService.login(usernameField.value, passwordField.value);
+      createNotification(`User ${usernameField.value} logged in`, true);
       setUsername('');
       setPassword('');
       changeUser(user);
@@ -28,11 +30,11 @@ const Login = ({ changeUser, createNotification }) => {
       <form onSubmit={handleLogin}>
         <div>
           Username
-          <input type="text" name="username" value={username} onChange={e => setUsername(e.target.value)} />
+          <input name="username" {...usernameField} />
         </div>
         <div>
           Password
-          <input type="password" name="password" value={password} onChange={e => setPassword(e.target.value)} />
+          <input name="password" {...passwordField} />
         </div>
         <button type="submit">Login</button>
       </form>

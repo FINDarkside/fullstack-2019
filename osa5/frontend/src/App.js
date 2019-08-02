@@ -24,6 +24,7 @@ function App() {
   };
 
   const createNotification = (message, success) => {
+    console.log('createNotification');
     const notification = { message, success };
     notification.id = setTimeout(() => removeNotification(notification), notificationTimeout);
     setNotifications([...notifications, notification]);
@@ -85,7 +86,6 @@ function App() {
 
   const loginForm = () => (
     <div>
-      <NotificationBar notifications={notifications} />
       <Login {...{ changeUser, createNotification }}></Login>
     </div>
   );

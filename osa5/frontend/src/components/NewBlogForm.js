@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import blogService from '../services/blogs';
 import PropTypes from 'prop-types';
+import { useField } from '../hooks'
 
 const NewBlogForm = ({ blogCreated, createNotification }) => {
-  const [title, setTitle] = useState('');
-  const [author, setAuthor] = useState('');
-  const [url, setUrl] = useState('');
+  const { setValue: setTitle, ...titleField } = useField('text');
+  const { setValue: setAuthor, ...authorField } = useField('text');
+  const { setValue: setUrl, ...urlField } = useField('text');
 
   const createBlog = async (event) => {
     event.preventDefault();
@@ -13,11 +14,11 @@ const NewBlogForm = ({ blogCreated, createNotification }) => {
       setTitle('');
       setAuthor('');
       setUrl('');
-      const blog = { title, author, url };
+      const blog = { title: titleField.value, author: authorField.value, url: urlField.value };
       const newBlog = await blogService.create(blog);
       console.log(newBlog);
       blogCreated(newBlog);
-      createNotification(`A new blog "${title}" by ${author} created`, true);
+      createNotification(`A new blog "${titleField.value}" by ${authorField.value} created`, true);
     } catch (exception) {
       if (exception.response && exception.response.data.error)
         createNotification(exception.response.data.error, false);
@@ -33,15 +34,15 @@ const NewBlogForm = ({ blogCreated, createNotification }) => {
       <form onSubmit={createBlog}>
         <div>
           Title
-          <input type="text" name="title" value={title} onChange={e => setTitle(e.target.value)} />
+          <input name="title" {...titleField} />
         </div>
         <div>
           Author
-          <input type="text" name="author" value={author} onChange={e => setAuthor(e.target.value)} />
+          <input name="author" {...authorField} />
         </div>
         <div>
           Url
-          <input type="text" name="url" value={url} onChange={e => setUrl(e.target.value)} />
+          <input name="url" {...urlField} />
         </div>
         <button type="submit">Create</button>
       </form>
