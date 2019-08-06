@@ -1,12 +1,16 @@
 import React from 'react';
-import AnecdoteForm from './AnecdoteForm';
-import AnecdoteList from './AnecdoteList';
+import AnecdoteForm from './components/AnecdoteForm';
+import AnecdoteList from './components/AnecdoteList';
+import Notification from './components/Notification';
+import Filter from './components/Filter';
 
-const App = ({ store }) => {
+const App = () => {
   return (
     <div>
-      <AnecdoteList store={store} />
-      <AnecdoteForm store={store} />
+      <Notification />
+      <Filter />
+      <AnecdoteList />
+      <AnecdoteForm />
     </div>
   )
 }
