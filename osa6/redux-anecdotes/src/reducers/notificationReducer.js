@@ -9,14 +9,21 @@ const reducer = (state = initialState, action) => {
     }
 }
 
-export const setNotification = (notification) => ({
-    type: 'SET_NOTIFICATION',
-    data: notification
-})
-
 export const clearNotification = () => ({
     type: 'SET_NOTIFICATION',
     data: null
 })
+
+let lastTimeout = null;
+export const setNotification = (notification, timeout) => {
+    return async (dispatch) => {
+        clearTimeout(lastTimeout)
+        dispatch({
+            type: 'SET_NOTIFICATION',
+            data: notification,
+        })
+        lastTimeout = setTimeout(() => dispatch(clearNotification()), timeout)
+    }
+}
 
 export default reducer

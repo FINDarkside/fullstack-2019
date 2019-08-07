@@ -8,14 +8,9 @@ const AnecdoteList = ({ anecdotes, notification, setNotification, voteAnecdote, 
   const notificationRef = useRef(notification);
   notificationRef.current = notification;
 
-  const vote = (anecdote) => {
-    voteAnecdote(anecdote.id)
-    const notification = { message: `You voted "${anecdote.content}"` }
-    setNotification(notification)
-    setTimeout(() => {
-      if (notificationRef.current === notification)
-        clearNotification()
-    }, 5000)
+  const vote = async (anecdote) => {
+    await voteAnecdote(anecdote)
+    setNotification(`You voted "${anecdote.content}"`, 3000)
   }
 
   return (
