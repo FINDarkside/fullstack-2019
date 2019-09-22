@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+        "target": "esnext",
+        "module": "es6",
+        "strictNullChecks": false,
+        "checkJs": false,
+        "jsx": "react"
+    }
+}
