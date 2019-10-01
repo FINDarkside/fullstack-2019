@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { likeBlog, deleteBlog } from '../reducers/blogReducer'
+import { createNotification } from '../reducers/notificationReducer'
+import { connect } from 'react-redux'
 
-const Blog = ({ blog, likeBlog, deleteBlog, showDeleteButton }) => {
+const Blog = ({ blog, likeBlog, deleteBlog, createNotification, user }) => {
   const [expanded, setExpanded] = useState(false);
 
   const toggleExpanded = () => {
@@ -10,31 +12,45 @@ const Blog = ({ blog, likeBlog, deleteBlog, showDeleteButton }) => {
   };
 
   const deleteButton = () => (
-    <button onClick={() => deleteBlog(blog)}>Delete</button>
+    <button onClick={deleteClicked}>Delete</button>
   );
 
   const likeClicked = async () => {
     try {
-      await blogService.like(blog);
-      const newBlogs = [...blogs];
-      newBlogs[blogs.findIndex((b) => b.id === blog.id)].likes++;
-      setBlogs(newBlogs);
-      createNotification('Blog liked', true);
+      await likeBlog(blog)
+      createNotification('Blog liked', 'success');
     } catch (err) {
       console.error(err);
       if (err.response && err.response.data.error)
-        createNotification(err.response.data.error, false);
+        createNotification(err.response.data.error, 'error');
       else
-        createNotification('Liking blog failed', false);
+        createNotification('Liking blog failed', 'error');
     }
   }
+
+  const deleteClicked = async () => {
+    try {
+      if (!window.confirm(`Delete blog "${blog.name}" by ${blog.author}?`))
+        return;
+      await deleteBlog(blog)
+      createNotification('Blog deleted', 'success');
+    } catch (err) {
+      console.error(err);
+      if (err.response && err.response.data.error)
+        createNotification(err.response.data.error, 'error');
+      else
+        createNotification('Deleting blog failed', 'error');
+    }
+  };
+
+  const showDeleteButton = user && user.id === blog.user.id;
 
   const expandedData = () => (
     <div>
       <a href={blog.url}>{blog.url}</a>
       <div>
         <span>{blog.likes} likes</span>
-        <button onClick={() => likeBlog(blog)}>like</button>
+        <button onClick={likeClicked}>like</button>
       </div>
       <div>Added by {blog.user.name}</div>
       {showDeleteButton && deleteButton()}
@@ -53,10 +69,8 @@ const Blog = ({ blog, likeBlog, deleteBlog, showDeleteButton }) => {
 
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
-  likeBlog: PropTypes.func.isRequired,
-  deleteBlog: PropTypes.func.isRequired,
   showDeleteButton: PropTypes.bool.isRequired,
 };
 
-const ConnectedBlog = connect(null, { likeBlog, deleteBlog })(Blog)
+const ConnectedBlog = connect((state) => ({user: state.user}), { likeBlog, deleteBlog, createNotification })(Blog)
 export default ConnectedBlog

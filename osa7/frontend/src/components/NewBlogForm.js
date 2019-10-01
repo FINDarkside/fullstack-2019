@@ -1,6 +1,8 @@
 import React from 'react';
 import { useField } from '../hooks'
 import { createBlog } from '../reducers/blogReducer'
+import { connect } from 'react-redux'
+import { createNotification } from '../reducers/notificationReducer'
 
 const NewBlogForm = ({ createBlog, createNotification }) => {
   const { setValue: setTitle, ...titleField } = useField('text');
@@ -47,5 +49,5 @@ const NewBlogForm = ({ createBlog, createNotification }) => {
   );
 };
 
-const ConnectedNewBlogForm = connect(null, { createBlog })(NewBlogForm)
+const ConnectedNewBlogForm = connect(null, { createBlog, createNotification })(NewBlogForm)
 export default ConnectedNewBlogForm

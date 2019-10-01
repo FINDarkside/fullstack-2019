@@ -1,9 +1,10 @@
 import React from 'react';
-import * as loginService from '../services/login';
-import PropTypes from 'prop-types';
 import { useField } from '../hooks'
+import { createNotification } from '../reducers/notificationReducer'
+import { connect } from 'react-redux'
+import { loginUser } from '../reducers/userReducer'
 
-const Login = ({ changeUser, createNotification }) => {
+const Login = ({ loginUser, createNotification }) => {
   const { setValue: setUsername, ...usernameField } = useField('text');
   const { setValue: setPassword, ...passwordField } = useField('password');
 
@@ -11,16 +12,15 @@ const Login = ({ changeUser, createNotification }) => {
     console.log('handleLogin');
     event.preventDefault();
     try {
-      const user = await loginService.login(usernameField.value, passwordField.value);
-      createNotification(`User ${usernameField.value} logged in`, true);
+      await loginUser(usernameField.value, passwordField.value)
+      createNotification(`User ${usernameField.value} logged in`, 'success');
       setUsername('');
       setPassword('');
-      changeUser(user);
     } catch (exception) {
       if (exception.response && exception.response.data.error)
-        createNotification(exception.response.data.error, false);
+        createNotification(exception.response.data.error, 'error');
       else
-        createNotification('Username or password is invalid', false);
+        createNotification('Username or password is invalid', 'error');
     }
   };
 
@@ -42,9 +42,8 @@ const Login = ({ changeUser, createNotification }) => {
   );
 };
 
-Login.propTypes = {
-  changeUser: PropTypes.func.isRequired,
-  createNotification: PropTypes.func.isRequired,
-};
-
-export default Login;
+const mapStateToProps = (state) => ({
+  user: state.user,
+})
+const ConnectedLogin = connect(mapStateToProps, { createNotification, loginUser })(Login);
+export default ConnectedLogin;

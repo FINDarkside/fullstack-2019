@@ -1,3 +1,4 @@
+import { login } from '../services/login'
 import blogService from '../services/blogs'
 
 const initialState = null
@@ -11,21 +12,30 @@ const reducer = (state = initialState, action) => {
   }
 }
 
-export const setUser = (user) => {
+export const loginUser = (username, password) => {
   return async (dispatch) => {
+    const user = await login(username, password);
+    setUser(user)();
+  }
+}
+
+export const setUser = (user) => {
+  return (dispatch) => {
+    localStorage.setItem('currentUser', JSON.stringify(user));
     blogService.setToken(user ? user.token : null)
     dispatch({
-      type: 'ADD_BLOG',
+      type: 'SET_USER',
       data: user
     })
   }
 }
 
 export const initUser = () => {
-  return async (dispatch) => {
+  return (dispatch) => {
     const oldUser = JSON.parse(localStorage.getItem('currentUser'))
+    console.log(oldUser)
     if (oldUser)
-      await setUser(oldUser)(dispatch)
+      setUser(oldUser)(dispatch)
   }
 }
 

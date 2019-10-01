@@ -48,4 +48,14 @@ export const likeBlog = (blog) => {
   }
 }
 
+export const deleteBlog = (blog) => {
+  return async (dispatch) => {
+    await blogService.delete(blog);
+    dispatch({
+      type: 'DELETE_BLOG',
+      data: { id: blog.id }
+    })
+  }
+}
+
 export default reducer
