@@ -1,6 +1,7 @@
 const blogsRouter = require('express').Router();
 const Blog = require('../models/Blog');
 const User = require('../models/User');
+const { ObjectID } = require('mongodb');
 
 blogsRouter.get('/', (request, response) => {
     Blog
@@ -60,6 +61,22 @@ blogsRouter.put('/:id', async (request, response, next) => {
         if (!blog)
             response.status(404).json({ err: 'User does not exist' });
         response.json(blog.toJSON());
+    } catch (err) {
+        next(err);
+    }
+});
+
+blogsRouter.post('/:id/comments', async (request, response, next) => {
+    try {
+        const comment = request.body.comment;
+        if (typeof comment !== 'string')
+            throw new Error('Invalid comment');
+        console.log(request.params.id);
+        const a = await Blog.findOneAndUpdate(
+            { _id: new ObjectID(request.params.id) },
+            { $push: { comments: comment } },
+        );
+        return response.status(201).end();
     } catch (err) {
         next(err);
     }
