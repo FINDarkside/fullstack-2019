@@ -1,5 +1,5 @@
 import axios from 'axios';
-const baseUrl = '/api/login';
+const baseUrl = BACKEND_URL + '/api/login';
 
 async function login(username, password) {
   console.log('Login ', username, password);
