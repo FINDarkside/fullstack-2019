@@ -1,8 +1,8 @@
 import React from 'react';
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
 
 const User = ({ user, userBlogs }) => {
-  console.log({ user, userBlogs })
+  console.log({ user, userBlogs });
   if (!user || !userBlogs)
     return null;
 
@@ -23,15 +23,15 @@ const User = ({ user, userBlogs }) => {
 };
 
 const mapStateToProps = (state, props) => {
-  console.log({ state, props })
+  console.log({ state, props });
   if (!props.user || !state.users)
-    return { ...props, userBlogs: null, user: null }
+    return { ...props, userBlogs: null, user: null };
   return {
     ...props,
     user: props.user,
     userBlogs: state.blogs.filter(b => b.user.id === props.user.id),
-  }
-}
+  };
+};
 
-const ConnectedUser = connect(mapStateToProps, null)(User)
-export default ConnectedUser
+const ConnectedUser = connect(mapStateToProps, null)(User);
+export default ConnectedUser;

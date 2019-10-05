@@ -1,10 +1,10 @@
 import React from 'react';
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
 import Togglable from './Togglable';
 import NewBlogForm from './NewBlogForm';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 
-const BlogList = ({ blogs, user }) => {
+const BlogList = ({ blogs }) => {
 
   const blogFormToggleRef = React.createRef();
 
@@ -30,7 +30,7 @@ const BlogList = ({ blogs, user }) => {
 
 const mapStateToProps = (state) => ({
   blogs: state.blogs.sort((a, b) => b.likes - a.likes),
-})
+});
 
-const ConnectedBlogList = connect(mapStateToProps, null)(BlogList)
-export default ConnectedBlogList
+const ConnectedBlogList = connect(mapStateToProps, null)(BlogList);
+export default ConnectedBlogList;

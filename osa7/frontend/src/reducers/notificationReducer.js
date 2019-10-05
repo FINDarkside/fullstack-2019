@@ -1,20 +1,20 @@
-const initialState = []
+const initialState = [];
 let idCounter = 0;
 
 const reducer = (state = initialState, action) => {
-  console.log(state)
-  console.log(action)
+  console.log(state);
+  console.log(action);
   switch (action.type) {
     case 'ADD_NOTIFICATION':
-      return [...state, action.data]
+      return [...state, action.data];
     case 'REMOVE_NOTIFICATION':
-      return state.filter(n => n.id !== action.data)
+      return state.filter(n => n.id !== action.data);
     case 'SET_NOTIFICATIONS':
-      return action.data
+      return action.data;
     default:
-      return state
+      return state;
   }
-}
+};
 
 export const createNotification = (message, mode, timeout = 2000) => {
   return (dispatch) => {
@@ -22,21 +22,21 @@ export const createNotification = (message, mode, timeout = 2000) => {
     dispatch({
       type: 'ADD_NOTIFICATION',
       data: { id, message, mode },
-    })
+    });
     setTimeout(() => dispatch({
       type: 'REMOVE_NOTIFICATION',
       data: id,
-    }), timeout)
-  }
-}
+    }), timeout);
+  };
+};
 
 export const clearNotifications = () => {
   return (dispatch) => {
     dispatch({
       type: 'SET_NOTIFICATIONS',
       data: [],
-    })
-  }
-}
+    });
+  };
+};
 
-export default reducer
+export default reducer;

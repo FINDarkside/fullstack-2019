@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { likeBlog, deleteBlog, addComment } from '../reducers/blogReducer'
-import { createNotification } from '../reducers/notificationReducer'
-import { connect } from 'react-redux'
-import { useField } from '../hooks'
+import React from 'react';
+import { likeBlog, deleteBlog, addComment } from '../reducers/blogReducer';
+import { createNotification } from '../reducers/notificationReducer';
+import { connect } from 'react-redux';
+import { useField } from '../hooks';
 
 const Blog = ({ blog, likeBlog, deleteBlog, createNotification, currentUser, addComment }) => {
   const { setValue: setComment, ...commentField } = useField('text');
@@ -20,22 +20,22 @@ const Blog = ({ blog, likeBlog, deleteBlog, createNotification, currentUser, add
       createNotification(err.response.data.error, 'error');
     else
       createNotification(fallbackMessage, 'error');
-  }
+  };
 
   const likeClicked = async () => {
     try {
-      await likeBlog(blog)
+      await likeBlog(blog);
       createNotification('Blog liked', 'info');
     } catch (err) {
       handleError(err, 'liking blog failed');
     }
-  }
+  };
 
   const deleteClicked = async () => {
     try {
       if (!window.confirm(`Delete blog "${blog.name}" by ${blog.author}?`))
         return;
-      await deleteBlog(blog)
+      await deleteBlog(blog);
       createNotification('Blog deleted', 'info');
     } catch (err) {
       handleError(err, 'deleting blog failed');
@@ -51,7 +51,7 @@ const Blog = ({ blog, likeBlog, deleteBlog, createNotification, currentUser, add
     } catch (err) {
       handleError(err, 'Creating comment failed');
     }
-  }
+  };
 
   const showDeleteButton = currentUser && currentUser.id === blog.user.id;
 
@@ -79,9 +79,9 @@ const Blog = ({ blog, likeBlog, deleteBlog, createNotification, currentUser, add
       </ul>
 
     </div >
-  )
+  );
 
 };
 
-const ConnectedBlog = connect((state) => ({ currentUser: state.currentUser }), { likeBlog, deleteBlog, createNotification, addComment })(Blog)
-export default ConnectedBlog
+const ConnectedBlog = connect((state) => ({ currentUser: state.currentUser }), { likeBlog, deleteBlog, createNotification, addComment })(Blog);
+export default ConnectedBlog;

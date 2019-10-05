@@ -1,26 +1,26 @@
 import React, { useEffect } from 'react';
 import Login from './components/Login';
 import NotificationBar from './components/NotificationBar';
-import { connect } from 'react-redux'
-import { initBlogs } from './reducers/blogReducer'
-import { setUser } from './reducers/currentUserReducer'
-import { createNotification } from './reducers/notificationReducer'
-import { initUsers } from './reducers/userReducer'
-import BlogList from './components/BlogList'
-import UserList from './components/UserList'
-import User from './components/User'
+import { connect } from 'react-redux';
+import { initBlogs } from './reducers/blogReducer';
+import { setUser } from './reducers/currentUserReducer';
+import { createNotification } from './reducers/notificationReducer';
+import { initUsers } from './reducers/userReducer';
+import BlogList from './components/BlogList';
+import UserList from './components/UserList';
+import User from './components/User';
 import Blog from './components/Blog';
 import NavigationMenu from './components/NavigationMenu';
-import { BrowserRouter as Router, Route, Link, withRouter } from 'react-router-dom'
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 const App = ({ initBlogs, currentUser, setUser, initUsers, users, blogs }) => {
 
   useEffect(() => {
     initBlogs();
     initUsers();
-    const oldUser = JSON.parse(localStorage.getItem('currentUser'))
+    const oldUser = JSON.parse(localStorage.getItem('currentUser'));
     if (oldUser)
-      setUser(oldUser)
+      setUser(oldUser);
   }, [initUsers, initBlogs, setUser]);
 
   const getUserById = (id) => users.find(u => u.id === id);
@@ -52,14 +52,14 @@ const App = ({ initBlogs, currentUser, setUser, initUsers, users, blogs }) => {
         </div>
       </div>
     </Router>
-  )
-}
+  );
+};
 
 const mapStateToProps = (state) => ({
   blogs: state.blogs.sort((a, b) => b.likes - a.likes),
   currentUser: state.currentUser,
   users: state.users,
-})
+});
 
-const ConnectedApp = connect(mapStateToProps, { initBlogs, createNotification, setUser, initUsers })(App)
-export default ConnectedApp
+const ConnectedApp = connect(mapStateToProps, { initBlogs, createNotification, setUser, initUsers })(App);
+export default ConnectedApp;

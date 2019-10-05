@@ -1,8 +1,8 @@
 import React from 'react';
-import { useField } from '../hooks'
-import { createBlog } from '../reducers/blogReducer'
-import { connect } from 'react-redux'
-import { createNotification } from '../reducers/notificationReducer'
+import { useField } from '../hooks';
+import { createBlog } from '../reducers/blogReducer';
+import { connect } from 'react-redux';
+import { createNotification } from '../reducers/notificationReducer';
 
 const NewBlogForm = ({ createBlog, createNotification }) => {
   const { setValue: setTitle, ...titleField } = useField('text');
@@ -16,7 +16,7 @@ const NewBlogForm = ({ createBlog, createNotification }) => {
       setAuthor('');
       setUrl('');
       const blog = { title: titleField.value, author: authorField.value, url: urlField.value };
-      await createBlog(blog)
+      await createBlog(blog);
       createNotification(`A new blog "${titleField.value}" by ${authorField.value} created`, 'info');
     } catch (exception) {
       if (exception.response && exception.response.data.error)
@@ -30,33 +30,33 @@ const NewBlogForm = ({ createBlog, createNotification }) => {
     <div>
       <h2 className="title">Create new</h2>
       <form onSubmit={onSubmit}>
-        <div class="field">
-          <label class="label">Title</label>
-          <div class="control">
-            <input class="input" placeholder="Title" {...titleField} />
+        <div className="field">
+          <label className="label">Title</label>
+          <div className="control">
+            <input className="input" placeholder="Title" {...titleField} />
           </div>
         </div>
-        <div class="field">
-          <label class="label">Author</label>
-          <div class="control">
-            <input class="input" placeholder="Author" {...authorField} />
+        <div className="field">
+          <label className="label">Author</label>
+          <div className="control">
+            <input className="input" placeholder="Author" {...authorField} />
           </div>
         </div>
-        <div class="field">
-          <label class="label">Url</label>
-          <div class="control">
-            <input class="input" placeholder="Url" {...urlField} />
+        <div className="field">
+          <label className="label">Url</label>
+          <div className="control">
+            <input className="input" placeholder="Url" {...urlField} />
           </div>
         </div>
-        <div class="field is-grouped">
-          <div class="control">
+        <div className="field is-grouped">
+          <div className="control">
             <button type="submit" className="button is-link">Submit</button>
           </div>
         </div>
       </form>
     </div>
-  )
+  );
 };
 
-const ConnectedNewBlogForm = connect(null, { createBlog, createNotification })(NewBlogForm)
-export default ConnectedNewBlogForm
+const ConnectedNewBlogForm = connect(null, { createBlog, createNotification })(NewBlogForm);
+export default ConnectedNewBlogForm;

@@ -10,7 +10,7 @@ const NotificationBar = ({ notifications }) => {
   const getClass = (mode) => {
     if (mode === 'error') return 'is-danger';
     return 'is-' + mode;
-  }
+  };
 
   return (
     <div className="notification-container">
@@ -29,6 +29,6 @@ NotificationBar.propTypes = {
 
 const mapStateToProps = (state) => ({
   notifications: state.notifications
-})
+});
 const ConnectedNotificationBar = connect(mapStateToProps, null)(NotificationBar);
 export default ConnectedNotificationBar;

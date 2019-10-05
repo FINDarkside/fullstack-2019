@@ -1,6 +1,6 @@
 import React from 'react';
-import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 const UserList = ({ users }) => {
   if (!users)
@@ -41,17 +41,17 @@ const UserList = ({ users }) => {
 
 const mapStateToProps = (state) => {
   if (!state.users || !state.blogs)
-    return []
+    return [];
   console.log('Users ', state.users);
   const userBlogs = {};
   for (const user of state.users)
     userBlogs[user.id] = { ...user, blogCount: 0 };
   for (const blog of state.blogs) {
     if (userBlogs[blog.user.id])
-      userBlogs[blog.user.id].blogCount++
+      userBlogs[blog.user.id].blogCount++;
   }
-  return { users: Object.values(userBlogs) }
-}
+  return { users: Object.values(userBlogs) };
+};
 
-const ConnectedUserList = connect(mapStateToProps, null)(UserList)
-export default ConnectedUserList
+const ConnectedUserList = connect(mapStateToProps, null)(UserList);
+export default ConnectedUserList;

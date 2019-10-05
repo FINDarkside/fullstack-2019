@@ -1,13 +1,13 @@
-import blogService from '../services/blogs'
+import blogService from '../services/blogs';
 
-const initialState = []
+const initialState = [];
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case 'ADD_BLOG':
-      return state.concat(action.data)
+      return state.concat(action.data);
     case 'SET_BLOGS':
-      return action.data
+      return action.data;
     case 'LIKE_BLOG':
       return state.map(b => b.id !== action.data.id ? b : {
         ...b,
@@ -19,31 +19,31 @@ const reducer = (state = initialState, action) => {
       return state.map(b => b.id !== action.data.id ? b : {
         ...b,
         comments: [...b.comments, action.data.comment]
-      })
+      });
     default:
-      return state
+      return state;
   }
-}
+};
 
 export const createBlog = (blog) => {
   return async (dispatch) => {
-    const newBlog = await blogService.create(blog)
+    const newBlog = await blogService.create(blog);
     dispatch({
       type: 'ADD_BLOG',
       data: newBlog
-    })
-  }
-}
+    });
+  };
+};
 
-export const initBlogs = (content) => {
+export const initBlogs = () => {
   return async (dispatch) => {
-    const blogs = await blogService.getAll()
+    const blogs = await blogService.getAll();
     dispatch({
       type: 'SET_BLOGS',
       data: blogs
-    })
-  }
-}
+    });
+  };
+};
 
 export const likeBlog = (blog) => {
   return async (dispatch) => {
@@ -51,9 +51,9 @@ export const likeBlog = (blog) => {
     dispatch({
       type: 'LIKE_BLOG',
       data: { id: blog.id }
-    })
-  }
-}
+    });
+  };
+};
 
 export const deleteBlog = (blog) => {
   return async (dispatch) => {
@@ -61,20 +61,20 @@ export const deleteBlog = (blog) => {
     dispatch({
       type: 'DELETE_BLOG',
       data: { id: blog.id }
-    })
-  }
-}
+    });
+  };
+};
 
 export const addComment = (blog, comment) => {
   return async (dispatch) => {
-    console.log({blog, comment})
+    console.log({ blog, comment });
     await blogService.addComment(blog.id, comment);
     dispatch({
       type: 'ADD_BLOG_COMMENT',
       data: { id: blog.id, comment: comment }
-    })
-  }
-}
+    });
+  };
+};
 
 
-export default reducer
+export default reducer;

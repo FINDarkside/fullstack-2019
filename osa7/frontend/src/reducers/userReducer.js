@@ -1,24 +1,24 @@
-import userService from '../services/users'
+import userService from '../services/users';
 
-const initialState = []
+const initialState = [];
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case 'SET_USERS':
-      return action.data
+      return action.data;
     default:
-      return state
+      return state;
   }
-}
+};
 
 export const initUsers = () => {
   return async (dispatch) => {
-    const users = await userService.getAll()
+    const users = await userService.getAll();
     dispatch({
       type: 'SET_USERS',
       data: users
-    })
-  }
-}
+    });
+  };
+};
 
-export default reducer
+export default reducer;

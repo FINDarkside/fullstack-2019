@@ -1,8 +1,8 @@
 import React from 'react';
-import { useField } from '../hooks'
-import { createNotification } from '../reducers/notificationReducer'
-import { connect } from 'react-redux'
-import { loginUser } from '../reducers/currentUserReducer'
+import { useField } from '../hooks';
+import { createNotification } from '../reducers/notificationReducer';
+import { connect } from 'react-redux';
+import { loginUser } from '../reducers/currentUserReducer';
 
 const Login = ({ loginUser, createNotification }) => {
   const { setValue: setUsername, ...usernameField } = useField('text');
@@ -14,10 +14,10 @@ const Login = ({ loginUser, createNotification }) => {
     setUsername('');
     setPassword('');
     try {
-      await loginUser(usernameField.value, passwordField.value)
+      await loginUser(usernameField.value, passwordField.value);
       createNotification(`User ${usernameField.value} logged in`, 'success');
     } catch (err) {
-      console.error(err)
+      console.error(err);
       if (err.response && err.response.data.error)
         createNotification(err.response.data.error, 'error');
       else
@@ -27,7 +27,7 @@ const Login = ({ loginUser, createNotification }) => {
 
   return (
     <div>
-      <div class="title">Login to application</div>
+      <div className="title">Login to application</div>
       <form onSubmit={handleLogin}>
         <div>
           Username
