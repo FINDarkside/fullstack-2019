@@ -2,14 +2,26 @@ const mongoose = require('mongoose');
 const supertest = require('supertest');
 const app = require('../src/app');
 const Blog = require('../src/models/Blog');
+const User = require('../src/models/User');
 const blogList = require('./util/blogList');
+const userList = require('./util/userList');
+const jwt = require('jsonwebtoken');
 
 const api = supertest(app);
 
+let token = jwt.sign({
+    username: 'TestUser',
+    id: '5a422a851b54a676234d17f7'
+}, process.env.JWT_SECRET);
 beforeEach(async () => {
     await Blog.deleteMany({});
     for (const blog of blogList) {
         const b = new Blog(blog);
+        await b.save();
+    }
+    await User.deleteMany({});
+    for (const user of userList) {
+        const b = new User(user);
         await b.save();
     }
 });
@@ -39,6 +51,7 @@ test('can add new blog', async () => {
         likes: 0
     };
     await api.post('/api/blogs')
+        .set('authorization', 'bearer ' + token)
         .send(newBlog)
         .expect(201);
     const blogs = await api.get('/api/blogs');
@@ -56,6 +69,7 @@ test('blog likes defaults to 0', async () => {
         url: 'google.com',
     };
     await api.post('/api/blogs')
+        .set('authorization', 'bearer ' + token)
         .send(newBlog)
         .expect(201);
     newBlog.likes = 0;
@@ -69,6 +83,7 @@ test('blog likes defaults to 0', async () => {
 
 test('responds with 400 if blog does not have title field', async () => {
     await api.post('/api/blogs')
+        .set('authorization', 'bearer ' + token)
         .send({
             author: 'Jesse',
             url: 'google.com',
@@ -78,6 +93,7 @@ test('responds with 400 if blog does not have title field', async () => {
 
 test('responds with 400 if blog does not have url field', async () => {
     await api.post('/api/blogs')
+        .set('authorization', 'bearer ' + token)
         .send({
             title: 'Mahtava kirja',
             author: 'Jesse',
@@ -88,7 +104,9 @@ test('responds with 400 if blog does not have url field', async () => {
 describe('deletion', () => {
     test('responds with 204 and deletes correct blog', async () => {
         const blogs = await api.get('/api/blogs');
-        const blogsAfter = await api.delete(`/api/blogs/${blogs.body[0].id}`)
+        const blogsAfter = await api
+            .delete(`/api/blogs/${blogs.body[0].id}`)
+            .set('authorization', 'bearer ' + token)
             .expect(204);
         expect(blogsAfter.body).not.toEqual(
             expect.arrayContaining([
@@ -107,9 +125,24 @@ describe('updating', () => {
         blogToEdit.title += 'a';
         blogToEdit.url += 'a';
         const updateBlog = await api.put(`/api/blogs/${blogToEdit.id}`)
+            .set('authorization', 'bearer ' + token)
             .send(blogToEdit)
             .expect(200);
+        delete updateBlog.body.user;
+        delete blogToEdit.user;
         expect(updateBlog.body).toEqual(blogToEdit);
+    });
+});
+
+describe('adding comments', () => {
+    test('work', async () => {
+        let blogs = (await api.get('/api/blogs')).body;
+        const blogToEdit = blogs[0];
+        await api.post(`/api/blogs/${blogToEdit.id}/comments`)
+            .send({ comment: 'asdasd' })
+            .expect(201);
+        blogs = (await api.get('/api/blogs')).body;
+        expect(blogs.find(b => b.id === blogToEdit.id).comments).toContain('asdasd');
     });
 });
 
