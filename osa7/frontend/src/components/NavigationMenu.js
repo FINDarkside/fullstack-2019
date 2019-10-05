@@ -7,7 +7,7 @@ const Login = ({ currentUser, setUser }) => {
   
   return (
     <div className="navigationMenu">
-      <Link to="/blogs">Blogs</Link>
+      <Link to="/">Blogs</Link>
       <Link to="/users">Users</Link>
       <span>{currentUser.name} logged in</span> <button onClick={() => setUser(null)}>Logout</button>
     </div>
