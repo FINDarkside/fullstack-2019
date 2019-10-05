@@ -1,41 +1,23 @@
-import { login } from '../services/login'
-import blogService from '../services/blogs'
+import userService from '../services/users'
 
-const initialState = null
+const initialState = []
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case 'SET_USER':
+    case 'SET_USERS':
       return action.data
     default:
       return state
   }
 }
 
-export const loginUser = (username, password) => {
+export const initUsers = () => {
   return async (dispatch) => {
-    const user = await login(username, password);
-    setUser(user)();
-  }
-}
-
-export const setUser = (user) => {
-  return (dispatch) => {
-    localStorage.setItem('currentUser', JSON.stringify(user));
-    blogService.setToken(user ? user.token : null)
+    const users = await userService.getAll()
     dispatch({
-      type: 'SET_USER',
-      data: user
+      type: 'SET_USERS',
+      data: users
     })
-  }
-}
-
-export const initUser = () => {
-  return (dispatch) => {
-    const oldUser = JSON.parse(localStorage.getItem('currentUser'))
-    console.log(oldUser)
-    if (oldUser)
-      setUser(oldUser)(dispatch)
   }
 }
 

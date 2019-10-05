@@ -1,56 +1,63 @@
 import React, { useEffect } from 'react';
 import Login from './components/Login';
-import Blog from './components/Blog';
-import NewBlogForm from './components/NewBlogForm';
 import NotificationBar from './components/NotificationBar';
-import Togglable from './components/Togglable';
 import { connect } from 'react-redux'
 import { initBlogs } from './reducers/blogReducer'
-import { initUser, setUser } from './reducers/userReducer'
+import { setUser } from './reducers/currentUserReducer'
 import { createNotification } from './reducers/notificationReducer'
+import { initUsers } from './reducers/userReducer'
+import BlogList from './components/BlogList'
+import UserList from './components/UserList'
+import User from './components/User'
+import Blog from './components/Blog';
+import NavigationMenu from './components/NavigationMenu';
+import { BrowserRouter as Router, Route, Link, withRouter } from 'react-router-dom'
 
-function App({ blogs, initBlogs, initUser, user }) {
+const App = ({ initBlogs, currentUser, setUser, initUsers, users, blogs }) => {
 
   useEffect(() => {
-    initUser();
     initBlogs();
-  }, [initUser, initBlogs]);
+    initUsers();
+    const oldUser = JSON.parse(localStorage.getItem('currentUser'))
+    if (oldUser)
+      setUser(oldUser)
+  }, [initUsers, initBlogs, setUser]);
 
-  const blogFormToggleRef = React.createRef();
+  const getUserById = (id) => users.find(u => u.id === id);
+  const blogById = (id) => blogs.find(u => u.id === id);
 
-  const loginForm = () => (
-    <div>
-      <Login />
-    </div>
-  );
-
-  const blogsView = () => (
-    <div>
-      <h1>Blogs</h1>
-      <span>{user.name} logged in</span> <button onClick={() => setUser(null)}>Logout</button>
-      <Togglable buttonLabel="Create blog" ref={blogFormToggleRef}>
-        <NewBlogForm />
-      </Togglable>
-      {
-        blogs.map(blog => (
-          <Blog key={blog.id} {...{ blog }} ></Blog>
-        ))
-      }
-    </div>
-  );
+  if (!currentUser) {
+    return (
+      <div>
+        <NotificationBar />
+        <Login />
+      </div>
+    );
+  }
 
   return (
-    <div>
-      <NotificationBar />
-      {user ? blogsView() : loginForm()}
-    </div>
-  );
+    <Router>
+      <div>
+        <NavigationMenu />
+        <NotificationBar />
+        <Route exact path="/" render={() => <BlogList />} />
+        <Route exact path="/users" render={() => <UserList />} />
+        <Route exact path="/users/:id" render={({ match }) =>
+          <User user={getUserById(match.params.id)} />
+        } />
+        <Route exact path="/blogs/:id" render={({ match }) =>
+          <Blog blog={blogById(match.params.id)} />
+        } />
+      </div>
+    </Router>
+  )
 }
 
 const mapStateToProps = (state) => ({
   blogs: state.blogs.sort((a, b) => b.likes - a.likes),
-  user: state.user,
+  currentUser: state.currentUser,
+  users: state.users,
 })
 
-const ConnectedApp = connect(mapStateToProps, { initBlogs, initUser, createNotification, setUser })(App)
+const ConnectedApp = connect(mapStateToProps, { initBlogs, createNotification, setUser, initUsers })(App)
 export default ConnectedApp

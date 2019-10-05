@@ -2,7 +2,7 @@ import React from 'react';
 import { useField } from '../hooks'
 import { createNotification } from '../reducers/notificationReducer'
 import { connect } from 'react-redux'
-import { loginUser } from '../reducers/userReducer'
+import { loginUser } from '../reducers/currentUserReducer'
 
 const Login = ({ loginUser, createNotification }) => {
   const { setValue: setUsername, ...usernameField } = useField('text');
@@ -11,14 +11,15 @@ const Login = ({ loginUser, createNotification }) => {
   const handleLogin = async (event) => {
     console.log('handleLogin');
     event.preventDefault();
+    setUsername('');
+    setPassword('');
     try {
       await loginUser(usernameField.value, passwordField.value)
       createNotification(`User ${usernameField.value} logged in`, 'success');
-      setUsername('');
-      setPassword('');
-    } catch (exception) {
-      if (exception.response && exception.response.data.error)
-        createNotification(exception.response.data.error, 'error');
+    } catch (err) {
+      console.error(err)
+      if (err.response && err.response.data.error)
+        createNotification(err.response.data.error, 'error');
       else
         createNotification('Username or password is invalid', 'error');
     }
@@ -42,8 +43,5 @@ const Login = ({ loginUser, createNotification }) => {
   );
 };
 
-const mapStateToProps = (state) => ({
-  user: state.user,
-})
-const ConnectedLogin = connect(mapStateToProps, { createNotification, loginUser })(Login);
+const ConnectedLogin = connect(null, { createNotification, loginUser })(Login);
 export default ConnectedLogin;

@@ -13,6 +13,13 @@ const reducer = (state = initialState, action) => {
         ...b,
         likes: b.likes + 1
       });
+    case 'DELETE_BLOG':
+      return state.filter(b => b.id !== action.data.id);
+    case 'ADD_BLOG_COMMENT':
+      return state.map(b => b.id !== action.data.id ? b : {
+        ...b,
+        comments: [...b.comments, action.data.comment]
+      })
     default:
       return state
   }
@@ -57,5 +64,17 @@ export const deleteBlog = (blog) => {
     })
   }
 }
+
+export const addComment = (blog, comment) => {
+  return async (dispatch) => {
+    console.log({blog, comment})
+    await blogService.addComment(blog.id, comment);
+    dispatch({
+      type: 'ADD_BLOG_COMMENT',
+      data: { id: blog.id, comment: comment }
+    })
+  }
+}
+
 
 export default reducer

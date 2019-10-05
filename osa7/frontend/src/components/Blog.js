@@ -1,30 +1,33 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import { likeBlog, deleteBlog } from '../reducers/blogReducer'
+import { likeBlog, deleteBlog, addComment } from '../reducers/blogReducer'
 import { createNotification } from '../reducers/notificationReducer'
 import { connect } from 'react-redux'
+import { useField } from '../hooks'
 
-const Blog = ({ blog, likeBlog, deleteBlog, createNotification, user }) => {
-  const [expanded, setExpanded] = useState(false);
+const Blog = ({ blog, likeBlog, deleteBlog, createNotification, currentUser, addComment }) => {
+  const { setValue: setComment, ...commentField } = useField('text');
 
-  const toggleExpanded = () => {
-    setExpanded(!expanded);
-  };
+  if (!blog)
+    return null;
 
   const deleteButton = () => (
     <button onClick={deleteClicked}>Delete</button>
   );
+
+  const handleError = (err, fallbackMessage) => {
+    console.error(err, fallbackMessage);
+    if (err.response && err.response.data.error)
+      createNotification(err.response.data.error, 'error');
+    else
+      createNotification(fallbackMessage, 'error');
+  }
 
   const likeClicked = async () => {
     try {
       await likeBlog(blog)
       createNotification('Blog liked', 'success');
     } catch (err) {
-      console.error(err);
-      if (err.response && err.response.data.error)
-        createNotification(err.response.data.error, 'error');
-      else
-        createNotification('Liking blog failed', 'error');
+      handleError(err, 'liking blog failed');
     }
   }
 
@@ -35,42 +38,50 @@ const Blog = ({ blog, likeBlog, deleteBlog, createNotification, user }) => {
       await deleteBlog(blog)
       createNotification('Blog deleted', 'success');
     } catch (err) {
-      console.error(err);
-      if (err.response && err.response.data.error)
-        createNotification(err.response.data.error, 'error');
-      else
-        createNotification('Deleting blog failed', 'error');
+      handleError(err, 'deleting blog failed');
     }
   };
 
-  const showDeleteButton = user && user.id === blog.user.id;
+  const onAddComment = async (event) => {
+    event.preventDefault();
+    try {
+      await addComment(blog, commentField.value);
+      setComment('');
+      createNotification('Comment created', 'success');
+    } catch (err) {
+      handleError(err, 'Creating comment failed');
+    }
+  }
 
-  const expandedData = () => (
+  const showDeleteButton = currentUser && currentUser.id === blog.user.id;
+
+  return (
     <div>
-      <a href={blog.url}>{blog.url}</a>
+      <h1 className="blogTitle">{blog.title} {blog.author}</h1>
+      <div><a href={blog.url}>{blog.url}</a></div>
       <div>
         <span>{blog.likes} likes</span>
         <button onClick={likeClicked}>like</button>
       </div>
       <div>Added by {blog.user.name}</div>
       {showDeleteButton && deleteButton()}
-    </div>
-  );
+      <h2>Comments</h2>
+      <form onSubmit={onAddComment}>
+        <input name="author" {...commentField} />
+        <button type="submit">Add comment</button>
+      </form>
+      <ul>
+        {
+          blog.comments.map((c, i) => (
+            <li key={i}>{c}</li>
+          ))
+        }
+      </ul>
 
-  return (
-    <div className="blog">
-      <div onClick={toggleExpanded} className="blogTitle">
-        {blog.title} {blog.author}
-      </div>
-      {expanded && expandedData()}
-    </div>
-  );
+    </div >
+  )
+
 };
 
-Blog.propTypes = {
-  blog: PropTypes.object.isRequired,
-  showDeleteButton: PropTypes.bool.isRequired,
-};
-
-const ConnectedBlog = connect((state) => ({user: state.user}), { likeBlog, deleteBlog, createNotification })(Blog)
+const ConnectedBlog = connect((state) => ({ currentUser: state.currentUser }), { likeBlog, deleteBlog, createNotification, addComment })(Blog)
 export default ConnectedBlog
