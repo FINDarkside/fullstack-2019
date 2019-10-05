@@ -39,15 +39,17 @@ const App = ({ initBlogs, currentUser, setUser, initUsers, users, blogs }) => {
     <Router>
       <div>
         <NavigationMenu />
-        <NotificationBar />
-        <Route exact path="/" render={() => <BlogList />} />
-        <Route exact path="/users" render={() => <UserList />} />
-        <Route exact path="/users/:id" render={({ match }) =>
-          <User user={getUserById(match.params.id)} />
-        } />
-        <Route exact path="/blogs/:id" render={({ match }) =>
-          <Blog blog={blogById(match.params.id)} />
-        } />
+        <div className="container page">
+          <NotificationBar />
+          <Route exact path="/" render={() => <BlogList />} />
+          <Route exact path="/users" render={() => <UserList />} />
+          <Route exact path="/users/:id" render={({ match }) =>
+            <User user={getUserById(match.params.id)} />
+          } />
+          <Route exact path="/blogs/:id" render={({ match }) =>
+            <Blog blog={blogById(match.params.id)} />
+          } />
+        </div>
       </div>
     </Router>
   )

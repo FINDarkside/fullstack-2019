@@ -25,7 +25,7 @@ const Blog = ({ blog, likeBlog, deleteBlog, createNotification, currentUser, add
   const likeClicked = async () => {
     try {
       await likeBlog(blog)
-      createNotification('Blog liked', 'success');
+      createNotification('Blog liked', 'info');
     } catch (err) {
       handleError(err, 'liking blog failed');
     }
@@ -36,7 +36,7 @@ const Blog = ({ blog, likeBlog, deleteBlog, createNotification, currentUser, add
       if (!window.confirm(`Delete blog "${blog.name}" by ${blog.author}?`))
         return;
       await deleteBlog(blog)
-      createNotification('Blog deleted', 'success');
+      createNotification('Blog deleted', 'info');
     } catch (err) {
       handleError(err, 'deleting blog failed');
     }
@@ -47,7 +47,7 @@ const Blog = ({ blog, likeBlog, deleteBlog, createNotification, currentUser, add
     try {
       await addComment(blog, commentField.value);
       setComment('');
-      createNotification('Comment created', 'success');
+      createNotification('Comment created', 'info');
     } catch (err) {
       handleError(err, 'Creating comment failed');
     }
@@ -57,7 +57,7 @@ const Blog = ({ blog, likeBlog, deleteBlog, createNotification, currentUser, add
 
   return (
     <div>
-      <h1 className="blogTitle">{blog.title} {blog.author}</h1>
+      <h1 className="title">{blog.title} {blog.author}</h1>
       <div><a href={blog.url}>{blog.url}</a></div>
       <div>
         <span>{blog.likes} likes</span>

@@ -6,11 +6,17 @@ const NotificationBar = ({ notifications }) => {
   console.log(notifications);
   if (!notifications.length)
     return null;
+
+  const getClass = (mode) => {
+    if (mode === 'error') return 'is-danger';
+    return 'is-' + mode;
+  }
+
   return (
     <div className="notification-container">
       {notifications.map((notification) =>
         <div key={notification.id}>
-          <div className={'notification ' + notification.mode}>{notification.message}</div>
+          <div className={'notification ' + getClass(notification.mode)}>{notification.message}</div>
         </div>
       )}
     </div>

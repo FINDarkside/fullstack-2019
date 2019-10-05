@@ -27,7 +27,7 @@ const Login = ({ loginUser, createNotification }) => {
 
   return (
     <div>
-      <h2>Login to application</h2>
+      <div class="title">Login to application</div>
       <form onSubmit={handleLogin}>
         <div>
           Username

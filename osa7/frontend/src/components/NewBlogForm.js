@@ -17,36 +17,45 @@ const NewBlogForm = ({ createBlog, createNotification }) => {
       setUrl('');
       const blog = { title: titleField.value, author: authorField.value, url: urlField.value };
       await createBlog(blog)
-      createNotification(`A new blog "${titleField.value}" by ${authorField.value} created`, true);
+      createNotification(`A new blog "${titleField.value}" by ${authorField.value} created`, 'info');
     } catch (exception) {
       if (exception.response && exception.response.data.error)
-        createNotification(exception.response.data.error, false);
+        createNotification(exception.response.data.error, 'error');
       else
-        createNotification('Creating blog failed', false);
+        createNotification('Creating blog failed', 'error');
     }
   };
 
-
   return (
     <div>
-      <h2>Create new</h2>
+      <h2 className="title">Create new</h2>
       <form onSubmit={onSubmit}>
-        <div>
-          Title
-          <input name="title" {...titleField} />
+        <div class="field">
+          <label class="label">Title</label>
+          <div class="control">
+            <input class="input" placeholder="Title" {...titleField} />
+          </div>
         </div>
-        <div>
-          Author
-          <input name="author" {...authorField} />
+        <div class="field">
+          <label class="label">Author</label>
+          <div class="control">
+            <input class="input" placeholder="Author" {...authorField} />
+          </div>
         </div>
-        <div>
-          Url
-          <input name="url" {...urlField} />
+        <div class="field">
+          <label class="label">Url</label>
+          <div class="control">
+            <input class="input" placeholder="Url" {...urlField} />
+          </div>
         </div>
-        <button type="submit">Create</button>
+        <div class="field is-grouped">
+          <div class="control">
+            <button type="submit" className="button is-link">Submit</button>
+          </div>
+        </div>
       </form>
     </div>
-  );
+  )
 };
 
 const ConnectedNewBlogForm = connect(null, { createBlog, createNotification })(NewBlogForm)

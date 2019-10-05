@@ -11,7 +11,7 @@ const BlogList = ({ blogs, user }) => {
   return (
     <div>
       <div>
-        <h1>Blogs</h1>
+        <h1 className="title">Blogs</h1>
         <Togglable buttonLabel="Create blog" ref={blogFormToggleRef}>
           <NewBlogForm />
         </Togglable>

@@ -15,11 +15,11 @@ const Togglable = React.forwardRef((props, ref) => {
   return (
     <div>
       <div style={hideWhenVisible}>
-        <button onClick={() => setVisible(true)}>{props.buttonLabel}</button>
+        <button className="button is-link" onClick={() => setVisible(true)}>{props.buttonLabel}</button>
       </div>
       <div style={showWhenVisible}>
         {props.children}
-        <button onClick={() => setVisible(false)}>cancel</button>
+        <button onClick={() => setVisible(false)}  className="button">cancel</button>
       </div>
     </div >
   );

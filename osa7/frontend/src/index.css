@@ -1,5 +1,26 @@
-.notification-bar {
-    margin: 0px 10px;
+html, body{
+    margin: 0;
+    padding: 0;
+}
+
+.page{
+    margin-top:20px;
+}
+
+.container {
+    max-width: 900px;
+}
+
+.loggedInText {
+    margin-right: 20px;
+    text-align: center
+}
+
+.notification-container {
+    z-index: 100;
+    position: absolute;
+    top: 20px;
+    right: 40px;
 }
 
 .notification {
@@ -21,7 +42,7 @@
     border: 2px solid #ff8888;
 }
 
-.blog{
+.blog {
     border: 1px solid #333;
     margin-top: 5px;
 }
