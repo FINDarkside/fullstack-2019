@@ -166,6 +166,12 @@ const resolvers = {
       author.born = args.setBornTo;
       return author;
     }
+  },
+  Author: {
+    name: root => root.name,
+    id: root => root.id,
+    born: root => root.born,
+    bookCount: root => books.filter(b => b.author === root.name).length
   }
 }
 
