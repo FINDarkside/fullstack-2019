@@ -20,8 +20,10 @@ const Authors = ({ show, result, updateAuthor }) => {
   if (!show) {
     return null
   }
+  console.log(result);
   if (result.loading)
     return <div>Loading...</div>
+  console.log(result);
   const authors = result.data.allAuthors;
   const authorOptions = authors.map(a => ({ value: a.name, label: a.name }));
 
@@ -36,7 +38,7 @@ const Authors = ({ show, result, updateAuthor }) => {
             <th>Books</th>
           </tr>
           {authors.map(a =>
-            <tr key={a.name}>
+            <tr key={a._id}>
               <td>{a.name}</td>
               <td>{a.born}</td>
               <td>{a.bookCount}</td>

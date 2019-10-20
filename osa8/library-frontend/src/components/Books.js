@@ -1,16 +1,40 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import Select from 'react-select'
+import { ALL_BOOKS } from '../queries'
 
-const Books = ({ show, result }) => {
+const Books = ({ show, client, allGenresResult }) => {
+  const [selectedGenre, setGenre] = useState({ value: null, label: 'ALL' })
+  const [books, setBooks] = useState([])
+  useEffect(() => {
+    const fetchBooks = async () => {
+      const { data } = await client.query({
+        query: ALL_BOOKS,
+        variables: { genre: selectedGenre.value }
+      });
+      console.log(data)
+      setBooks(data.allBooks);
+    }
+    fetchBooks();
+  })
+
+
   if (!show) {
     return null
   }
 
-  if (result.loading)
+  if (allGenresResult.loading)
     return <div>Loading...</div>
-  const books = result.data.allBooks;
+
+  const genres = allGenresResult.data.allGenres;
+  const genreOptions = [{ value: null, label: 'ALL' }, ...genres.map(s => ({ value: s, label: s }))];
+
   return (
     <div>
       <h2>Books</h2>
+      <div>
+        Genre:
+          <Select value={selectedGenre} onChange={o => setGenre(o)} options={genreOptions} />
+      </div>
       <table>
         <tbody>
           <tr>
@@ -19,9 +43,9 @@ const Books = ({ show, result }) => {
             <th>Published</th>
           </tr>
           {books.map(a =>
-            <tr key={a.title}>
+            <tr key={a._id}>
               <td>{a.title}</td>
-              <td>{a.author}</td>
+              <td>{a.author.name}</td>
               <td>{a.published}</td>
             </tr>
           )}

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-const NewBook = ({ show, addBook }) => {
+const NewBook = ({ show, addBook, client }) => {
   const [title, setTitle] = useState('')
   const [author, setAuhtor] = useState('')
   const [published, setPublished] = useState('')
@@ -30,6 +30,7 @@ const NewBook = ({ show, addBook }) => {
     setAuhtor('')
     setGenres([])
     setGenre('')
+    client.resetStore()
   }
 
   const addGenre = () => {

@@ -23,6 +23,9 @@ module.exports = {
       if (!context.currentUser)
         return null;
       return context.currentUser
+    },
+    allGenres: () => {
+      return Book.distinct('genres');
     }
   },
   Mutation: {
@@ -76,7 +79,7 @@ module.exports = {
       const user = await User.findOne({ username: args.username });
       if (!user)
         throw new UserInputError('User does not exist', { username: args.username });
-      if (args.password !== 'C#>java')
+      if (args.password !== 'pass')
         throw new UserInputError('Incorrect password');
       const tokenData = {
         username: args.username,
