@@ -18,7 +18,7 @@ module.exports = {
       const books = await Book.find(query).populate('author');
       return books;
     },
-    allAuthors: Author.find(),
+    allAuthors: () => Author.find(),
     me: (root, args, context) => {
       if (!context.currentUser)
         return null;
