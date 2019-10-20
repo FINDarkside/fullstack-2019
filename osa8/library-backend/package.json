@@ -6,13 +6,16 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "watch": "nodemon index.js"
+    "watch": "nodemon index.js",
+    "lint": "eslint .",
+    "lintfix": "eslint . --fix"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "apollo-server": "^2.9.6",
     "dotenv": "^8.2.0",
+    "eslint": "^6.5.1",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.7.5",
     "mongoose-unique-validator": "^2.0.3",

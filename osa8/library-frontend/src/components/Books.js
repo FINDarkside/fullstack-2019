@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import Select from 'react-select'
 import { ALL_BOOKS } from '../queries'
+import { useSubscription } from '@apollo/react-hooks'
+import { BOOK_ADDED } from '../subscriptions'
 
 const Books = ({ show, client, allGenresResult }) => {
   const [selectedGenre, setGenre] = useState({ value: null, label: 'ALL' })
@@ -15,6 +17,11 @@ const Books = ({ show, client, allGenresResult }) => {
       setBooks(data.allBooks);
     }
     fetchBooks();
+  })
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      console.log({ subscriptionData })
+    }
   })
 
 

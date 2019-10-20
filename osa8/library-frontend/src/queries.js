@@ -19,7 +19,7 @@ query allBooks($genre: String){
       name
     }
     genres
-    _id,
+    _id
   }
 }`
 

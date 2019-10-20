@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { ApolloServer } = require('apollo-server')
+const { ApolloServer } = require('apollo-server');
 const Book = require('./models/Book');
 const Author = require('./models/Author');
 const defaultData = require('./defaultData');
@@ -17,6 +17,8 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: async ({ req }) => {
+    if (!req)
+      return;
     const auth = req.headers.authorization;
     if (auth && auth.toLowerCase().startsWith('bearer ')) {
       const decodedToken = jwt.verify(auth.substr(7), process.env.JWT_SECRET);
@@ -24,13 +26,14 @@ const server = new ApolloServer({
       return { currentUser };
     }
   }
-})
+});
 
 async function init() {
   //await initDb();
-  server.listen().then(({ url }) => {
-    console.log(`Server ready at ${url}`)
-  })
+  server.listen().then(({ url, subscriptionsUrl }) => {
+    console.log(`Server ready at ${url}`);
+    console.log(`Subscriptions ready at ${subscriptionsUrl}`);
+  });
 }
 
 async function initDb() {
@@ -47,4 +50,4 @@ async function initDb() {
 init().catch(err => {
   console.error(err);
   process.exit(1);
-})
+});

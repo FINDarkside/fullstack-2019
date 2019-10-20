@@ -1,4 +1,4 @@
-const { gql } = require('apollo-server')
+const { gql } = require('apollo-server');
 
 module.exports = gql`
 type Book {
@@ -58,4 +58,10 @@ type Mutation {
     username: String!
     password: String!
   ): Token
-}`;
+}
+
+type Subscription {
+  bookAdded: Book!
+}    
+
+`;

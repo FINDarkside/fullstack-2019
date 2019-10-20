@@ -8,11 +8,21 @@ import { Query, Mutation } from 'react-apollo'
 import { ALL_AUTHORS, ALL_BOOKS, ALL_GENRES } from './queries'
 import { CREATE_BOOK, UPDATE_AUTHOR, LOGIN } from './mutations'
 import { useApolloClient } from 'react-apollo'
+import { useSubscription } from '@apollo/react-hooks'
+import { BOOK_ADDED } from './subscriptions'
 
 const App = () => {
   const [page, setPage] = useState('authors')
   const [token, setToken] = useState(localStorage.getItem('user-token'));
   const client = useApolloClient()
+
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      if(subscriptionData.data.bookAdded){
+        alert(`New book added: ${subscriptionData.data.bookAdded.title}`)
+      }
+    }
+  })
 
   if (page === 'login' && token)
     setPage('authors')

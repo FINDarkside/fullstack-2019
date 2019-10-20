@@ -17,7 +17,7 @@ let authors = [
   {
     name: 'Sandi Metz', // birthyear not known
   },
-]
+];
 
 /*
  * It would be more sensible to assosiate book and the author by saving 
@@ -68,9 +68,9 @@ let books = [
     author: 'Fyodor Dostoevsky',
     genres: ['classic', 'revolution']
   },
-]
+];
 
 module.exports = {
   authors,
   books,
-}
+};
